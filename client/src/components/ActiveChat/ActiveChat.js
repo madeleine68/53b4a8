@@ -29,7 +29,7 @@ const ActiveChat = ({
 
   const conversation = conversations
     ? conversations.find(
-        (conversation) => conversation.otherUser.id === activeConversation
+        (conversation) => conversation.otherUser.username === activeConversation
       )
     : {};
 
@@ -38,7 +38,7 @@ const ActiveChat = ({
   };
 
   return (
-    <Box className={classes.root}>
+    <Box className={classes.root} sx={{border:"3px solid red"}}>
       {isConversation(conversation) && conversation.otherUser && (
         <>
           <Header
