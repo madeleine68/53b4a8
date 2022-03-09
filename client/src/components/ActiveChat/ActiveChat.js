@@ -23,7 +23,7 @@ const ActiveChat = ({
   user,
   conversations,
   activeConversation,
-  postMessage,
+  postMessage
 }) => {
   const classes = useStyles();
 
@@ -38,7 +38,7 @@ const ActiveChat = ({
   };
 
   return (
-    <Box className={classes.root} sx={{border:"3px solid red"}}>
+    <Box className={classes.root}>
       {isConversation(conversation) && conversation.otherUser && (
         <>
           <Header
