@@ -51,9 +51,6 @@ const Home = ({ user, logout }) => {
 
   const saveMessage = async (body) => {
     const { data } = await axios.post('/api/messages',body)
-    //  {
-    //   ...body,
-    // });
     return data;
   };
 
@@ -97,7 +94,7 @@ const Home = ({ user, logout }) => {
       })
     );
     },
-    [setConversations, conversations]
+    [setConversations]
   );
 
   const addMessageToConversation = useCallback(
@@ -126,7 +123,7 @@ const Home = ({ user, logout }) => {
       })
     );
     },
-    [setConversations, conversations]
+    [setConversations]
   );
 
   const setActiveChat = (username) => {

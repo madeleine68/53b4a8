@@ -1,19 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Box } from '@material-ui/core';
 import { SenderBubble, OtherUserBubble } from '.';
 import moment from 'moment';
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-
-  // const latestMessage = useRef(null);
-  // const handleScroll = () => {
-  //   latestMessage.current?.scrollIntoView({ behavior: "smooth" })
-  // }
-
-  // useEffect(() => {
-  //   handleScroll();
-  // },[messages])
 
   return (
     <Box>
