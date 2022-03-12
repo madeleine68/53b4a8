@@ -50,7 +50,7 @@ const Home = ({ user, logout }) => {
   };
 
   const saveMessage = async (body) => {
-    const { data } = await axios.post('/api/messages',body)
+    const { data } = await axios.post('/api/messages', body)
     return data;
   };
 

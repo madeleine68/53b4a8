@@ -1,7 +1,7 @@
-import React from 'react';
-import { Box } from '@material-ui/core';
-import { SenderBubble, OtherUserBubble } from '.';
-import moment from 'moment';
+import React from "react";
+import { Box } from "@material-ui/core";
+import { SenderBubble, OtherUserBubble } from ".";
+import moment from "moment";
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
@@ -9,10 +9,9 @@ const Messages = (props) => {
   return (
     <Box>
       {messages.map((message) => {
-        const time = moment(message.createdAt).format('h:mm');
-        console.log(message.text)
+        const time = moment(message.createdAt).format("h:mm");
 
-        return (message.senderId === userId ? (
+        return message.senderId === userId ? (
           <SenderBubble key={message.id} text={message.text} time={time} />
         ) : (
           <OtherUserBubble
@@ -21,7 +20,7 @@ const Messages = (props) => {
             time={time}
             otherUser={otherUser}
           />
-        ));
+        );
       })}
     </Box>
   );

@@ -23,7 +23,7 @@ const ActiveChat = ({
   user,
   conversations,
   activeConversation,
-  postMessage
+  postMessage,
 }) => {
   const classes = useStyles();
 
