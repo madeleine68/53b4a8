@@ -37,7 +37,7 @@ const Home = ({ user, logout }) => {
     users.forEach((user) => {
       // only create a fake convo if we don't already have a convo with this user
       if (!currentUsers[user.id]) {
-        let fakeConvo = { otherUser: user, messages: [] };
+        let fakeConvo = { otherUser: user, messages: [], unreadMessagesNumber: 0  };
         newState.push(fakeConvo);
       }
     });
@@ -106,25 +106,38 @@ const Home = ({ user, logout }) => {
           id: message.conversationId,
           otherUser: sender,
           messages: [message],
+          unreadMessagesNumber: 0,
         };
-        newConvo.latestMessageText = message.text;
-        setConversations((prev) => [ ...prev, newConvo]);
-      };
+       
+        setConversations((prev) => [...prev, newConvo]);
+      }
       setConversations((prev) =>
-      prev.map((convo) => {
-        if (convo.id === message.conversationId) {
-          const convoCopy = { ...convo };
-          convoCopy.messages = [...convoCopy.messages, message];
-          convoCopy.latestMessageText = message.text;
-          return convoCopy;
-        } else {
-          return convo;
-        }
-      })
-    );
+        prev.map((convo) => {
+          if (convo.id === message.conversationId) {
+            const convoCopy = { ...convo };
+            convoCopy.messages = [...convoCopy.messages, message];
+            convoCopy.latestMessageText = message.text;
+            convoCopy.unreadMessagesNumber += 1;
+            console.log("++++", convoCopy.unreadMessagesNumber)
+            return convoCopy;
+          } else {
+            return convo;
+          }
+        })
+      );
     },
-    [setConversations]
+    [setConversations, conversations]
   );
+
+  const markMessagesAsRead = (convoId, senderId) => async (dispatch) => {
+    try {
+      const { data } = await axios.put('/api/conversations/read', { convoId: convoId, senderId: senderId });
+      dispatch(replaceConversation(data.conversation))
+    } catch (error) {
+      console.error(error);
+    }
+  } 
+
 
   const setActiveChat = (username) => {
     setActiveConversation(username);
@@ -165,6 +178,7 @@ const Home = ({ user, logout }) => {
     socket.on('add-online-user', addOnlineUser);
     socket.on('remove-offline-user', removeOfflineUser);
     socket.on('new-message', addMessageToConversation);
+    socket.on('read-message', readMessages);
 
     return () => {
       // before the component is destroyed
@@ -173,7 +187,7 @@ const Home = ({ user, logout }) => {
       socket.off('remove-offline-user', removeOfflineUser);
       socket.off('new-message', addMessageToConversation);
     };
-  }, [addMessageToConversation, addOnlineUser, removeOfflineUser, socket]);
+  }, [addMessageToConversation, addOnlineUser, removeOfflineUser, readMessages ,socket]);
 
   useEffect(() => {
     // when fetching, prevent redirect
@@ -219,6 +233,8 @@ const Home = ({ user, logout }) => {
           clearSearchedUsers={clearSearchedUsers}
           addSearchedUsers={addSearchedUsers}
           setActiveChat={setActiveChat}
+          activeConversation={activeConversation}
+          setConversations={setConversations}
         />
         <ActiveChat
           activeConversation={activeConversation}
