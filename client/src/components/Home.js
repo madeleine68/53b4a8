@@ -108,7 +108,8 @@ const Home = ({ user, logout }) => {
           messages: [message],
           unreadMessagesNumber: 0,
         };
-       
+        newConvo.latestMessageText = message.text;
+        newConvo.unreadMessagesNumber += 1;
         setConversations((prev) => [...prev, newConvo]);
       }
       setConversations((prev) =>
@@ -118,7 +119,6 @@ const Home = ({ user, logout }) => {
             convoCopy.messages = [...convoCopy.messages, message];
             convoCopy.latestMessageText = message.text;
             convoCopy.unreadMessagesNumber += 1;
-            console.log("++++", convoCopy.unreadMessagesNumber)
             return convoCopy;
           } else {
             return convo;
@@ -126,18 +126,29 @@ const Home = ({ user, logout }) => {
         })
       );
     },
-    [setConversations, conversations]
+    [setConversations]
   );
 
-  const markMessagesAsRead = (convoId, senderId) => async (dispatch) => {
-    try {
-      const { data } = await axios.put('/api/conversations/read', { convoId: convoId, senderId: senderId });
-      dispatch(replaceConversation(data.conversation))
-    } catch (error) {
-      console.error(error);
-    }
-  } 
+  const readMessages = useCallback(
+    (data) => {
+      const { conversationId } = data;
 
+      const conversationsCopy = [...conversations];
+      conversationsCopy.forEach((convo, id) => {
+        if (convo.id === conversationId) {
+          const convoCopy = { ...convo };
+          const lastMessage = {
+            ...convoCopy.messages[convoCopy.messages.length - 1],
+            isRead: true,
+          };
+          convoCopy.lastReadMessage = lastMessage;
+          conversationsCopy[id] = convoCopy;
+        }
+      });
+      setConversations(conversationsCopy);
+    },
+    [setConversations]
+  );
 
   const setActiveChat = (username) => {
     setActiveConversation(username);
