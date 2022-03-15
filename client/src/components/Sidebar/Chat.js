@@ -58,6 +58,21 @@ const Chat = ({
         unreadMessagesNumber > 0
       ) {
         try {
+          setConversations((prev) => {
+            const totalConversations = [...prev];
+            totalConversations.forEach((convo, id) => {
+              if (convo.id === conversation.id) {
+                const convoCopy = { ...convo };
+                const messagesCopy = convoCopy.messages.map((message) => {
+                  return { ...message, isRead: true };
+                });
+                convoCopy.messages = messagesCopy;
+                convoCopy.unreadMessagesNumber = 0;
+                totalConversations[id] = convoCopy;
+              }
+            });
+            return totalConversations;
+          });
           await axios.put("/api/messages", {
             read: true,
             otherUserId: otherUser.id,
