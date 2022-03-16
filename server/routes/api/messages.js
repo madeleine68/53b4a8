@@ -73,6 +73,7 @@ router.put("/", async (req, res, next) => {
           },
         }
       );
+      res.sendStatus(204);
     }
 
   } catch (error) {
