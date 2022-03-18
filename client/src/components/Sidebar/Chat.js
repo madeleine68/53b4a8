@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from "react";
 import { Box, Badge } from "@material-ui/core";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
-// import Badge from './Badge';
 import axios from "axios";
 import { SocketContext } from "../../context/socket";
 
